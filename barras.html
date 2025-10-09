@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Barras con capacidad real</title>
+  <style>
+    body {
+      background: #0f172a;
+      color: #f1f5f9;
+      font-family: sans-serif;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 30px;
+    }
+
+    h1 {
+      font-size: 22px;
+    }
+
+    .zona-superior {
+      display: flex;
+      align-items: center;
+      gap: 60px;
+    }
+
+    .cubos {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .cubo {
+      height: 60px;
+      border-radius: 6px;
+      cursor: grab;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: bold;
+      font-size: 13px;
+      user-select: none;
+    }
+
+    .idea { width: 25px; background: #3b82f6; }
+    .outline { width: 54px; background: #22c55e; }
+    .script { width: 110px; background: #f97316; }
+
+    .cubo:active { opacity: 0.7; cursor: grabbing; }
+
+    .barras {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      align-items: center;
+    }
+
+    .barra {
+      background: #1e293b;
+      border-radius: 10px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px;
+      position: relative;
+      flex-wrap: wrap;
+    }
+
+    .titulo-barra {
+      position: absolute;
+      top: -22px;
+      left: 10px;
+      font-size: 14px;
+      color: #94a3b8;
+    }
+
+    .barra.over { outline: 3px dashed #38bdf8; }
+    #trash.over { outline: 3px dashed #ef4444; }
+
+    #trash {
+      width: 80px;
+      height: 80px;
+      background: #1e293b;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    #trash span {
+      font-size: 12px;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+
+    #trash:hover { background: #334155; }
+
+    .info {
+      font-size: 13px;
+      color: #94a3b8;
+      margin-top: -10px;
+    }
+
+    /* Escala visual de las barras según capacidad */
+    #basic { width: calc(8 * 30px + 20px); }
+    #plus  { width: calc(16 * 30px + 20px); }
+    #pro   { width: calc(24 * 30px + 20px); }
+  </style>
+</head>
+<body>
+  <h1>Arrastrá cubos a las barras o al tacho</h1>
+
+  <div class="zona-superior">
+    <div>
+      <div class="cubos" id="zonaCubos">
+        <div class="cubo idea plantilla" draggable="true" data-size="1" data-type="idea">Idea</div>
+        <div class="cubo outline plantilla" draggable="true" data-size="2" data-type="outline">Outline</div>
+        <div class="cubo script plantilla" draggable="true" data-size="4" data-type="script">Script</div>
+      </div>
+      <div class="info">(Idea = 1x1, Outline = 1x2, Script = 1x4)</div>
+    </div>
+    <div id="trash">🗑️<span>Eliminar</span></div>
+  </div>
+
+  <div class="barras">
+    <div class="barra" id="basic" data-capacidad="8">
+      <span class="titulo-barra">Basic (8 ideas)</span>
+    </div>
+    <div class="barra" id="plus" data-capacidad="16">
+      <span class="titulo-barra">Plus (16 ideas)</span>
+    </div>
+    <div class="barra" id="pro" data-capacidad="24">
+      <span class="titulo-barra">Pro (24 ideas)</span>
+    </div>
+  </div>
+
+  <script>
+    const barras = document.querySelectorAll('.barra');
+    const trash = document.getElementById('trash');
+
+    document.addEventListener('dragstart', e => {
+      if (e.target.classList.contains('cubo')) {
+        e.dataTransfer.setData('type', e.target.dataset.type);
+        e.dataTransfer.setData('size', e.target.dataset.size);
+        e.dataTransfer.setData('isTemplate', e.target.classList.contains('plantilla'));
+        e.target.classList.add('dragging');
+      }
+    });
+
+    document.addEventListener('dragend', e => {
+      if (e.target.classList.contains('cubo')) e.target.classList.remove('dragging');
+    });
+
+    function setupDropZone(zone, isBarra = false) {
+      zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('over'); });
+      zone.addEventListener('dragleave', () => zone.classList.remove('over'));
+
+      zone.addEventListener('drop', e => {
+        e.preventDefault();
+        zone.classList.remove('over');
+        const type = e.dataTransfer.getData('type');
+        const size = parseInt(e.dataTransfer.getData('size'));
+        const isTemplate = e.dataTransfer.getData('isTemplate') === 'true';
+        const dragging = document.querySelector('.dragging');
+
+        if (isBarra) {
+          const capacidad = parseInt(zone.dataset.capacidad);
+          const ocupado = Array.from(zone.children)
+            .filter(c => c.classList.contains('cubo'))
+            .reduce((sum, c) => sum + parseInt(c.dataset.size), 0);
+
+          if (ocupado + size <= capacidad) {
+            let nuevo;
+            if (isTemplate) {
+              nuevo = document.createElement('div');
+              nuevo.className = `cubo ${type}`;
+              nuevo.textContent = type.charAt(0).toUpperCase() + type.slice(1);
+              nuevo.dataset.type = type;
+              nuevo.dataset.size = size;
+              nuevo.draggable = true;
+            } else {
+              nuevo = dragging;
+            }
+            zone.appendChild(nuevo);
+          } else {
+            alert('❌ No hay espacio suficiente en esta barra');
+          }
+        } else if (zone.id === 'trash') {
+          if (dragging && dragging.parentElement.classList.contains('barra')) {
+            dragging.remove();
+          }
+        }
+      });
+    }
+
+    barras.forEach(barra => setupDropZone(barra, true));
+    setupDropZone(trash, false);
+  </script>
+</body>
+</html>
