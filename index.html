@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Barras semanales con capacidad real</title>
+  <title>Build Your Plan</title>
   <style>
     body {
       background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
@@ -97,9 +97,10 @@
       height: 80px;
       display: flex;
       align-items: center;
+      justify-content: center; /* centrado de cubos */
       gap: 4px;
       padding: 6px;
-      flex-wrap: nowrap;
+      flex-wrap: wrap; /* permite que los cubos se acomoden */
       box-shadow: inset 0 0 8px rgba(0,0,0,0.3);
       transition: box-shadow 0.2s ease, outline 0.2s ease;
       overflow: hidden;
@@ -158,6 +159,9 @@
     </div>
     <div id="trash">🗑️<span>Eliminar</span></div>
   </div>
+
+  <!-- Botón para limpiar todas las barras -->
+  <button id="limpiar" style="margin-bottom: 20px; padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer; background:#ef4444; color:white; font-weight:600;">Limpiar todas las barras</button>
 
   <div class="barras">
     <div class="contenedor-barra">
@@ -237,8 +241,17 @@
 
     barras.forEach(barra => setupDropZone(barra, true));
     setupDropZone(trash, false);
+
+    // Limpiar todas las barras
+    const botonLimpiar = document.getElementById('limpiar');
+    botonLimpiar.addEventListener('click', () => {
+      barras.forEach(barra => {
+        barra.innerHTML = '';
+      });
+    });
   </script>
 </body>
 </html>
+
 
 
