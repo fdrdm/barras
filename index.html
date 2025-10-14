@@ -81,12 +81,13 @@
       height: 80px;
       display: flex;
       align-items: center;
-      gap: 6px;
-      padding: 8px;
+      gap: 4px;
+      padding: 6px;
       position: relative;
       flex-wrap: wrap;
       box-shadow: inset 0 0 8px rgba(0,0,0,0.3);
       transition: box-shadow 0.2s ease, outline 0.2s ease;
+      overflow: hidden;
     }
 
     .barra:hover {
@@ -95,11 +96,12 @@
 
     .titulo-barra {
       position: absolute;
-      top: -26px;
+      top: -28px;
       left: 10px;
-      font-size: 15px;
+      font-size: 14px;
       color: #cbd5e1;
       font-weight: 500;
+      white-space: nowrap;
     }
 
     .barra.over { outline: 3px dashed #38bdf8; }
@@ -131,16 +133,10 @@
       transform: translateY(-3px);
     }
 
-    .info {
-      font-size: 13px;
-      color: #94a3b8;
-      margin-top: -10px;
-    }
-
-    /* Escala visual de las barras según capacidad */
-    #basic { width: calc(8 * 30px + 40px); }
-    #plus  { width: calc(16 * 30px + 40px); }
-    #pro   { width: calc(24 * 30px + 40px); }
+    /* Ajuste de anchos precisos (sin espacio sobrante) */
+    #basic { width: calc(8 * 30px + 12px); }
+    #plus  { width: calc(16 * 30px + 12px); }
+    #pro   { width: calc(24 * 30px + 12px); }
   </style>
 </head>
 <body>
@@ -154,7 +150,6 @@
         <div class="cubo outline plantilla" draggable="true" data-size="2" data-type="outline">Outline</div>
         <div class="cubo script plantilla" draggable="true" data-size="4" data-type="script">Script</div>
       </div>
-      <div class="info">(Idea = 1x1, Outline = 1x2, Script = 1x4)</div>
     </div>
     <div id="trash">🗑️<span>Eliminar</span></div>
   </div>
