@@ -64,7 +64,7 @@
 
     .idea { width: 30px; background: #3b82f6; }
     .outline { width: 60px; background: #22c55e; }
-    .script { width: 120px; background: #f97316; }
+    .script { width: 240px; background: #f97316; } /* ← ancho corregido (8 ideas) */
 
     .cubo:active { opacity: 0.7; cursor: grabbing; }
 
@@ -152,7 +152,7 @@
       <div class="cubos" id="zonaCubos">
         <div class="cubo idea plantilla" draggable="true" data-size="1" data-type="idea">Idea</div>
         <div class="cubo outline plantilla" draggable="true" data-size="2" data-type="outline">Outline</div>
-        <div class="cubo script plantilla" draggable="true" data-size="4" data-type="script">Script</div>
+        <div class="cubo script plantilla" draggable="true" data-size="8" data-type="script">Script</div> <!-- ← tamaño corregido -->
       </div>
     </div>
     <div id="trash">🗑️<span>Eliminar</span></div>
@@ -163,17 +163,17 @@
 
   <div class="barras">
     <div class="contenedor-barra">
-      <span class="titulo-barra">Basic — 8 Ideas / 4 Outlines / 2 Scripts / MIX</span>
+      <span class="titulo-barra">Basic — 8 Ideas / 4 Outlines / 1 Script / MIX</span> <!-- texto actualizado -->
       <div class="barra" id="basic" data-capacidad="8"></div>
     </div>
 
     <div class="contenedor-barra">
-      <span class="titulo-barra">Plus — 16 Ideas / 8 Outlines / 4 Scripts / MIX</span>
+      <span class="titulo-barra">Plus — 16 Ideas / 8 Outlines / 2 Scripts / MIX</span>
       <div class="barra" id="plus" data-capacidad="16"></div>
     </div>
 
     <div class="contenedor-barra">
-      <span class="titulo-barra">Pro — 24 Ideas / 12 Outlines / 6 Scripts / MIX</span>
+      <span class="titulo-barra">Pro — 24 Ideas / 12 Outlines / 3 Scripts / MIX</span>
       <div class="barra" id="pro" data-capacidad="24"></div>
     </div>
   </div>
